@@ -3742,7 +3742,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
   const fetchStudentCourses = async () => {
     try {
       const resProfile = await axios.get(
-        `API_BASE/user-context/${currentUser.username}`,
+        `${API_BASE}/user-context/${currentUser.username}`,
       );
       setAssignedSubjects(resProfile.data.assignedSubjects || []);
     } catch (err) {
@@ -3753,7 +3753,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
   const fetchSubmissionRecords = async () => {
     try {
       const res = await axios.get(
-        `API_BASE/submissions/${currentUser.username}/${activeSubjectId}`,
+        `${API_BASE}/submissions/${currentUser.username}/${activeSubjectId}`,
       );
       setSubmissionRecords(res.data);
     } catch (err) {
@@ -3764,7 +3764,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
   const fetchQuizRecords = async () => {
     try {
       const res = await axios.get(
-        `API_BASE/quiz-submissions/${currentUser.username}/${activeSubjectId}`,
+        `${API_BASE}/quiz-submissions/${currentUser.username}/${activeSubjectId}`,
       );
       setQuizRecords(res.data);
     } catch (err) {
@@ -3775,7 +3775,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
   const fetchMyProgress = async () => {
     setProgressLoading(true);
     try {
-      const res = await axios.get(`API_BASE/admin/student-progress`);
+      const res = await axios.get(`${API_BASE}/admin/student-progress`);
       const mine = res.data.find((s) => s.username === currentUser.username);
       setMyProgressData(mine ? mine.subjectProgress : []);
     } catch (err) {
@@ -4016,7 +4016,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
     setQuizSubmittedState(true);
 
     try {
-      await axios.post("API_BASE/quiz-submissions", {
+      await axios.post(`${API_BASE}/quiz-submissions`, {
         username: currentUser.username,
         subjectId: activeSubjectId,
         quizId: activeQuiz._id,
@@ -4072,7 +4072,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
     if (!confirmed) return;
     try {
       await axios.delete(
-        `API_BASE/quiz-submissions/${currentUser.username}/${activeSubjectId}/${activeQuiz._id}`,
+        `${API_BASE}/quiz-submissions/${currentUser.username}/${activeSubjectId}/${activeQuiz._id}`,
       );
       localStorage.removeItem(
         `lms_quiz_cache_${currentUser.username}_${activeQuiz._id}`,
@@ -4131,7 +4131,7 @@ export default function StudentDashboard({ currentUser, sidebarOpen, setSidebarO
   const handleFinalTaskSubmit = async () => {
     if (!isOutputValid) return;
     try {
-      await axios.post("API_BASE/submissions/submit-question", {
+      await axios.post(`${API_BASE}/submissions/submit-question`, {
         username: currentUser.username,
         subjectId: activeSubjectId,
         taskId: activeTask._id,
