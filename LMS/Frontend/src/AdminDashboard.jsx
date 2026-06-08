@@ -68,6 +68,8 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
   const [previewAnswers, setPreviewAnswers] = useState([]);
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
 
+  const [editingMaterial, setEditingMaterial] = useState(null); // { _id, title, htmlContent }
+
   const { modal, showAlert, showConfirm, close: closeModal } = useModal();
 
   useEffect(() => {
@@ -129,7 +131,11 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
     setQuizQuestionCount(val);
     const base = [...quizQuestions];
     while (base.length < val)
-      base.push({ questionText: "", options: ["", "", "", ""], correctIndex: 0 });
+      base.push({
+        questionText: "",
+        options: ["", "", "", ""],
+        correctIndex: 0,
+      });
     base.splice(val);
     setQuizQuestions(base);
   };
@@ -158,7 +164,9 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
       });
       setQuizTitle("");
       setQuizQuestionCount(1);
-      setQuizQuestions([{ questionText: "", options: ["", "", "", ""], correctIndex: 0 }]);
+      setQuizQuestions([
+        { questionText: "", options: ["", "", "", ""], correctIndex: 0 },
+      ]);
       fetchAdminData();
       await showAlert("Quiz Created", "Quiz created successfully!", "success");
     } catch (err) {
@@ -196,7 +204,13 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
 
   const handleUploadContent = async (e) => {
     e.preventDefault();
-    if (!activeSubjectId || !contentForm.title || !contentForm.html || !activeTab) return;
+    if (
+      !activeSubjectId ||
+      !contentForm.title ||
+      !contentForm.html ||
+      !activeTab
+    )
+      return;
     try {
       await axios.post(`${API_BASE}/subjects/${activeSubjectId}/content`, {
         type: activeTab,
@@ -227,15 +241,21 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
       setTaskTitle("");
       setTaskTopic("");
       setQuestionCount(1);
-      setTaskQuestions([{
-        questionText: "",
-        allowedLanguages: ["python"],
-        initialPythonCode: "",
-        initialJavaCode: "",
-        expectedOutput: "",
-      }]);
+      setTaskQuestions([
+        {
+          questionText: "",
+          allowedLanguages: ["python"],
+          initialPythonCode: "",
+          initialJavaCode: "",
+          expectedOutput: "",
+        },
+      ]);
       fetchAdminData();
-      await showAlert("Task Created", "Interactive program task node generated successfully!", "success");
+      await showAlert(
+        "Task Created",
+        "Interactive program task node generated successfully!",
+        "success",
+      );
     } catch (err) {
       console.error(err);
     }
@@ -276,10 +296,37 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
         setActiveView(null);
       }
       fetchAdminData();
-      await showAlert("Subject Deleted", `"${subjectName}" has been permanently removed.`, "danger");
+      await showAlert(
+        "Subject Deleted",
+        `"${subjectName}" has been permanently removed.`,
+        "danger",
+      );
     } catch (err) {
       console.error(err);
-      await showAlert("Error", "Failed to delete subject. Please try again.", "danger");
+      await showAlert(
+        "Error",
+        "Failed to delete subject. Please try again.",
+        "danger",
+      );
+    }
+  };
+
+  const handleEditMaterial = async (e) => {
+    e.preventDefault();
+    if (!editingMaterial) return;
+    try {
+      await axios.put(
+        `${API_BASE}/subjects/${activeSubjectId}/content/materials/${editingMaterial._id}`,
+        {
+          title: editingMaterial.title,
+          htmlContent: editingMaterial.htmlContent,
+        },
+      );
+      setEditingMaterial(null);
+      fetchAdminData();
+      await showAlert("Updated", "Material updated successfully!", "success");
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -294,14 +341,26 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
     try {
       await axios.delete(`${API_BASE}/students/${studentId}`);
       fetchAdminData();
-      await showAlert("Student Deleted", `"${studentUsername}" has been permanently removed.`, "danger");
+      await showAlert(
+        "Student Deleted",
+        `"${studentUsername}" has been permanently removed.`,
+        "danger",
+      );
     } catch (err) {
       console.error(err);
-      await showAlert("Error", "Failed to delete student. Please try again.", "danger");
+      await showAlert(
+        "Error",
+        "Failed to delete student. Please try again.",
+        "danger",
+      );
     }
   };
 
-  const handleToggleSubjectAssignment = async (studentId, subjectId, isAssigned) => {
+  const handleToggleSubjectAssignment = async (
+    studentId,
+    subjectId,
+    isAssigned,
+  ) => {
     const student = students.find((s) => s._id === studentId);
     let currentAssignedIds = student.assignedSubjects.map((s) => s._id || s);
     if (isAssigned) {
@@ -864,7 +923,6 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
       })()}
     </div>
   );
-
 
   const renderStudentProgress = () => {
     const studentData = progressReport.find(
@@ -1452,10 +1510,13 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
         <h1>Welcome Back, Principal Admin</h1>
       </div>
 
-   
-
       {/* Creation forms */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "2rem",
+        }}>
         <div className="form-panel">
           <div className="form-title">➕ Add New Subject</div>
           <form onSubmit={handleCreateSubject}>
@@ -1541,7 +1602,6 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
               setActiveView("students");
             }}>
             <span style={{ fontSize: "1rem" }}>👥</span> All Students
-
           </div>
 
           <div className="sidebar-heading">Subjects</div>
@@ -1688,7 +1748,7 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
                   {activeTab} Content Index Engine
                 </h2>
 
-                {selectedSubject[activeTab]?.length === 0 ? (
+                {/* {selectedSubject[activeTab]?.length === 0 ? (
                   <p style={{ color: "var(--muted)" }}>
                     No items populated inside this block category hook.
                   </p>
@@ -1764,6 +1824,186 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
                           Delete
                         </button>
                       </div>
+                    </div>
+                  ))
+                )} */}
+
+                {selectedSubject[activeTab]?.length === 0 ? (
+                  <p style={{ color: "var(--muted)" }}>
+                    No items populated inside this block category hook.
+                  </p>
+                ) : (
+                  selectedSubject[activeTab].map((item, idx) => (
+                    <div key={item._id || idx}>
+                      <div
+                        className="item-row-link"
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}>
+                        <span
+                          onClick={() => {
+                            if (activeTab !== "tasks")
+                              setActiveHtmlContent(item.htmlContent);
+                          }}
+                          style={{ cursor: "pointer", flexGrow: 1 }}>
+                          ⚡ {item.title}{" "}
+                          {item.topic && (
+                            <span
+                              style={{
+                                color: "var(--muted)",
+                                fontSize: "0.8rem",
+                              }}>
+                              ({item.topic})
+                            </span>
+                          )}
+                        </span>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                          }}>
+                          {activeTab === "materials" && (
+                            <button
+                              className="action-btn"
+                              style={{
+                                padding: "4px 10px",
+                                fontSize: "0.75rem",
+                                borderColor: "var(--green)",
+                                color: "var(--green)",
+                              }}
+                              onClick={() =>
+                                setEditingMaterial(
+                                  editingMaterial?._id === item._id
+                                    ? null
+                                    : {
+                                        _id: item._id,
+                                        title: item.title,
+                                        htmlContent: item.htmlContent,
+                                      },
+                                )
+                              }>
+                              {editingMaterial?._id === item._id
+                                ? "Cancel"
+                                : "✏ Edit"}
+                            </button>
+                          )}
+                          {activeTab !== "tasks" && (
+                            <button
+                              className="action-btn"
+                              style={{
+                                padding: "4px 10px",
+                                fontSize: "0.75rem",
+                                borderColor: "var(--blue)",
+                                color: "var(--blue)",
+                              }}
+                              onClick={() => {
+                                if (activeTab === "quizzes") {
+                                  setPreviewQuiz(item);
+                                  setPreviewAnswers(
+                                    new Array(
+                                      (item.questions || []).length,
+                                    ).fill(null),
+                                  );
+                                  setPreviewSubmitted(false);
+                                  setActiveHtmlContent("__quiz_preview__");
+                                } else {
+                                  setActiveHtmlContent(item.htmlContent);
+                                }
+                              }}>
+                              View
+                            </button>
+                          )}
+                          <button
+                            className="action-btn"
+                            style={{
+                              padding: "4px 10px",
+                              background: "#3b1111",
+                              border: "1px solid #7f1d1d",
+                              color: "#f87171",
+                              fontSize: "0.75rem",
+                            }}
+                            onClick={(e) => handleDeleteContent(e, item._id)}>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Inline edit form — only for materials */}
+                      {activeTab === "materials" &&
+                        editingMaterial?._id === item._id && (
+                          <div
+                            style={{
+                              background: "#0a1222",
+                              border: "1px solid var(--green)",
+                              borderRadius: "10px",
+                              padding: "1.25rem",
+                              marginBottom: "1rem",
+                            }}>
+                            <div
+                              style={{
+                                fontFamily: "JetBrains Mono",
+                                fontSize: "0.75rem",
+                                color: "var(--green)",
+                                marginBottom: "0.75rem",
+                                letterSpacing: "1px",
+                              }}>
+                              ✏ EDITING: {item.title}
+                            </div>
+                            <form onSubmit={handleEditMaterial}>
+                              <input
+                                type="text"
+                                className="input-field"
+                                placeholder="Material title"
+                                value={editingMaterial.title}
+                                onChange={(e) =>
+                                  setEditingMaterial({
+                                    ...editingMaterial,
+                                    title: e.target.value,
+                                  })
+                                }
+                              />
+                              <textarea
+                                className="input-field"
+                                style={{
+                                  minHeight: "200px",
+                                  fontFamily: "JetBrains Mono",
+                                }}
+                                placeholder="HTML content..."
+                                value={editingMaterial.htmlContent}
+                                onChange={(e) =>
+                                  setEditingMaterial({
+                                    ...editingMaterial,
+                                    htmlContent: e.target.value,
+                                  })
+                                }
+                              />
+                              <div style={{ display: "flex", gap: "10px" }}>
+                                <button
+                                  type="submit"
+                                  className="action-btn"
+                                  style={{
+                                    borderColor: "var(--green)",
+                                    color: "var(--green)",
+                                  }}>
+                                  💾 Save Changes
+                                </button>
+                                <button
+                                  type="button"
+                                  className="action-btn"
+                                  style={{
+                                    borderColor: "var(--muted)",
+                                    color: "var(--muted)",
+                                  }}
+                                  onClick={() => setEditingMaterial(null)}>
+                                  Cancel
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        )}
                     </div>
                   ))
                 )}
@@ -2339,7 +2579,6 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
             )}
           </div>
         ) : (
-
           !activeSubjectId &&
           activeView !== "progress" &&
           activeView !== "subjects" &&

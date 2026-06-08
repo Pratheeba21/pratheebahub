@@ -2028,6 +2028,28 @@ app.post("/api/subjects/:id/content", async (req, res) => {
   }
 });
 
+// Add this after the POST /api/subjects/:id/content route
+app.put("/api/subjects/:subjectId/content/materials/:contentId", async (req, res) => {
+  try {
+    const { subjectId, contentId } = req.params;
+    const { title, htmlContent } = req.body;
+
+    const subject = await Subject.findById(subjectId);
+    if (!subject) return res.status(404).json({ error: "Subject not found" });
+
+    const material = subject.materials.id(contentId);
+    if (!material) return res.status(404).json({ error: "Material not found" });
+
+    if (title !== undefined) material.title = title;
+    if (htmlContent !== undefined) material.htmlContent = htmlContent;
+
+    await subject.save();
+    res.json(subject);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.post("/api/subjects/:id/tasks", async (req, res) => {
   try {
     const { title, topic, questions } = req.body;
