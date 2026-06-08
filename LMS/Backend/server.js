@@ -1800,8 +1800,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/subjectPortal";
+// const MONGO_URI =
+//   process.env.MONGO_URI ||
+//   "mongodb+srv://Pratheeba:PratheebaMongoDBAtlas@cluster0.ixnufht.mongodb.net/subjectPortal?appName=Cluster0";
+
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error("FATAL ERROR: MONGO_URI is not defined in .env file");
+  process.exit(1);
+}
+
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("MongoDB Database Connected Successfully"))
