@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
+
 export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +18,7 @@ export default function Login({ onLoginSuccess }) {
     }
     try {
       // Backend authentication call
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("API_BASE/auth/login", {
         username,
         password,
       });
