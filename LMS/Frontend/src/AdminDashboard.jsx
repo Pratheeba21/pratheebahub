@@ -331,6 +331,32 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
   //   }
   // };
 
+  // const handleCreateStudent = async (e) => {
+  //   e.preventDefault();
+  //   if (!newStudentUser || !newStudentPass) return;
+  //   try {
+  //     await axios.post(`${API_BASE}/students`, {
+  //       username: newStudentUser,
+  //       password: newStudentPass,
+  //       email: newStudentEmail,
+  //       mobile: newStudentMobile,
+  //     });
+  //     setNewStudentUser("");
+  //     setNewStudentPass("");
+  //     setNewStudentEmail("");
+  //     setNewStudentMobile("");
+  //     fetchAdminData();
+  //     await showAlert(
+  //       "Account Created!",
+  //       `Student "${newStudentUser}" has been registered successfully.${newStudentEmail ? " A welcome email with credentials has been sent." : ""}`,
+  //       "success",
+  //     );
+  //   } catch (err) {
+  //     console.error(err);
+  //     await showAlert("Error", "Failed to create student account.", "danger");
+  //   }
+  // };
+
   const handleCreateStudent = async (e) => {
     e.preventDefault();
     if (!newStudentUser || !newStudentPass) return;
@@ -353,7 +379,9 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
       );
     } catch (err) {
       console.error(err);
-      await showAlert("Error", "Failed to create student account.", "danger");
+      const msg =
+        err.response?.data?.error || "Failed to create student account.";
+      await showAlert("Error", msg, "danger");
     }
   };
 
