@@ -357,13 +357,22 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
     }
   };
 
+  // const handleUploadContent = async (e) => {
+  //   e.preventDefault();
+  //   if (
+  //     !activeSubjectId ||
+  //     !contentForm.title ||
+  //     !contentForm.html ||
+  //     !activeTab
+  //   )
+  //     return;
   const handleUploadContent = async (e) => {
     e.preventDefault();
     if (
       !activeSubjectId ||
       !contentForm.title ||
       !contentForm.html ||
-      !activeTab
+      activeTab !== "materials"
     )
       return;
     try {

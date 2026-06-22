@@ -196,7 +196,10 @@ app.post("/api/subjects/:id/content", async (req, res) => {
         .status(404)
         .json({ error: "Subject context target index missed" });
 
-    if (!["materials", "quizzes"].includes(type)) {
+    // if (!["materials", "quizzes"].includes(type)) {
+    //   return res.status(400).json({ error: "Invalid content type." });
+    // }
+    if (!["materials", "quizzes", "tasks"].includes(type)) {
       return res.status(400).json({ error: "Invalid content type." });
     }
 
