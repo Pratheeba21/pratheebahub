@@ -33,7 +33,7 @@ export default function Login({ onLoginSuccess }) {
     }
     try {
       // Backend authentication call
-      const res = await axios.post("https://pratheebahub-backend.onrender.com/api/auth/login", {
+      const res = await axios.post(`${API_BASE}/api/auth/login`, {
         username,
         password,
       });
