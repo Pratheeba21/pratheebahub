@@ -4258,8 +4258,7 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
                                       />
                                     </div>
                                   </div>
-                                  <input
-                                    type="text"
+                                  <textarea
                                     className="input-field"
                                     placeholder="Expected Console Output"
                                     value={q.expectedOutput}
@@ -4323,8 +4322,7 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
                           gridTemplateColumns: "1fr 1fr",
                           gap: "1rem",
                         }}>
-                        <input
-                          type="text"
+                        <textarea
                           className="input-field"
                           placeholder="Task Container Title (e.g., Lab Assignment 02)"
                           value={taskTitle}
@@ -5164,8 +5162,7 @@ export default function AdminDashboard({ currentUser, sidebarOpen, setSidebarOpe
                                 />
                               </div>
                             </div>
-                            <input
-                              type="text"
+                            <textarea
                               className="input-field"
                               placeholder="Expected Output (for validation)"
                               value={q.expectedOutput}
