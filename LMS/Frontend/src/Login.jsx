@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
+
 export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +33,7 @@ export default function Login({ onLoginSuccess }) {
     }
     try {
       // Backend authentication call
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("https://pratheebahub-backend.onrender.com/api/auth/login", {
         username,
         password,
       });
@@ -45,7 +48,7 @@ export default function Login({ onLoginSuccess }) {
     setForgotError("");
     setForgotMsg("");
     try {
-      await axios.post("http://localhost:5000/api/auth/forgot-password", {
+      await axios.post(`${API_BASE}/api/auth/forgot-password`, {
         email: forgotEmail,
       });
       setForgotMsg("OTP sent to your email. Check your inbox.");
@@ -60,7 +63,7 @@ export default function Login({ onLoginSuccess }) {
     setForgotError("");
     setForgotMsg("");
     try {
-      await axios.post("http://localhost:5000/api/auth/verify-otp", {
+      await axios.post(`${API_BASE}/api/auth/verify-otp`, {
         email: forgotEmail,
         otp: forgotOtp,
         newPassword: forgotNewPass,
@@ -92,7 +95,7 @@ export default function Login({ onLoginSuccess }) {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post(`${API_BASE}/api/auth/signup`, {
         username: signupUsername,
         password: signupPassword,
         email: signupEmail,
