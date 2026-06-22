@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const MONGO_URI = "mongodb://127.0.0.1:27017/subjectPortal";
+// const MONGO_URI = "mongodb://127.0.0.1:27017/subjectPortal";
+
+const MONGO_URI =
+  process.env.MONGO_URI ||
+  "mongodb+srv://Pratheeba:PratheebaMongoDBAtlas@cluster0.ixnufht.mongodb.net/subjectPortal?appName=Cluster0"; 
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
