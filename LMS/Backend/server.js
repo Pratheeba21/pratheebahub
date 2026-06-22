@@ -1961,12 +1961,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// const MONGO_URI =
+//   process.env.MONGO_URI || "mongodb://127.0.0.1:27017/subjectPortal";
+// mongoose
+//   .connect(MONGO_URI)
+//   .then(() => console.log("MongoDB Database Connected Successfully"))
+//   .catch((err) => console.error("Database connection failure:", err));
+
 const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/subjectPortal";
+  process.env.MONGO_URI ||
+  "mongodb+srv://Pratheeba:PratheebaMongoDBAtlas@cluster0.ixnufht.mongodb.net/subjectPortal?appName=Cluster0"; 
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("MongoDB Database Connected Successfully"))
   .catch((err) => console.error("Database connection failure:", err));
+
+
 
 const SubjectSchema = new mongoose.Schema({
   name: { type: String, required: true },
