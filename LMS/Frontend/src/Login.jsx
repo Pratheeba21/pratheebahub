@@ -1020,6 +1020,302 @@
 //   );
 // }
 
+// import React, { useState, useEffect } from "react";
+// import Login from "./Login";
+// import AdminDashboard from "./AdminDashboard";
+// import StudentDashboard from "./StudentDashboard";
+
+// const API_BASE = "https://pratheebahub-backend.onrender.com/api";
+
+// function TopHeader({ currentUser, onLogout, sidebarOpen, setSidebarOpen }) {
+//   const [time, setTime] = useState(new Date());
+
+//   useEffect(() => {
+//     const timer = setInterval(() => setTime(new Date()), 1000);
+//     return () => clearInterval(timer);
+//   }, []);
+
+//   const formatTime = (d) =>
+//     d.toLocaleTimeString("en-US", {
+//       hour: "2-digit",
+//       minute: "2-digit",
+//       second: "2-digit",
+//       hour12: true,
+//     });
+
+//   const formatDate = (d) =>
+//     d.toLocaleDateString("en-US", {
+//       weekday: "short",
+//       month: "short",
+//       day: "numeric",
+//     });
+
+//   const greet = () => {
+//     const h = time.getHours();
+//     if (h < 12) return "Good Morning";
+//     if (h < 17) return "Good Afternoon";
+//     return "Good Evening";
+//   };
+
+//   return (
+//     <header
+//       style={{
+//         display: "flex",
+//         justifyContent: "space-between",
+//         alignItems: "center",
+//         padding: "0 2rem 0 1.25rem",
+//         height: "52px",
+//         background: "var(--surface)",
+//         borderBottom: "1px solid var(--border)",
+//         position: "fixed",
+//         top: 0,
+//         left: sidebarOpen ? "280px" : "0px",
+//         right: 0,
+//         zIndex: 150,
+//         transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+//       }}>
+//       {/* Left — sidebar toggle + greeting */}
+//       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+//         <button
+//           onClick={() => setSidebarOpen(!sidebarOpen)}
+//           title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+//           style={{
+//             background: "var(--bg)",
+//             border: "1px solid var(--border)",
+//             color: "var(--muted)",
+//             width: "32px",
+//             height: "32px",
+//             borderRadius: "8px",
+//             cursor: "pointer",
+//             display: "flex",
+//             alignItems: "center",
+//             justifyContent: "center",
+//             fontSize: "0.9rem",
+//             flexShrink: 0,
+//             transition: "all 0.2s",
+//           }}
+//           onMouseOver={(e) => {
+//             e.currentTarget.style.borderColor = "var(--blue)";
+//             e.currentTarget.style.color = "var(--blue)";
+//           }}
+//           onMouseOut={(e) => {
+//             e.currentTarget.style.borderColor = "var(--border)";
+//             e.currentTarget.style.color = "var(--muted)";
+//           }}>
+//           {sidebarOpen ? "←" : "☰"}
+//         </button>
+
+//         <div
+//           style={{ width: "1px", height: "24px", background: "var(--border)" }}
+//         />
+
+//         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//           <div
+//             style={{
+//               width: "6px",
+//               height: "6px",
+//               borderRadius: "50%",
+//               background: "var(--green)",
+//               boxShadow: "0 0 6px var(--green)",
+//               animation: "pulse 2s infinite",
+//             }}
+//           />
+//           <span
+//             style={{
+//               fontFamily: "JetBrains Mono",
+//               fontSize: "0.76rem",
+//               color: "var(--muted)",
+//             }}>
+//             {greet()}
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* Center — app identity */}
+//       <div
+//         style={{
+//           position: "absolute",
+//           left: "50%",
+//           transform: "translateX(-50%)",
+//           display: "flex",
+//           alignItems: "center",
+//           gap: "8px",
+//         }}>
+//         <span
+//           style={{
+//             fontFamily: "JetBrains Mono",
+//             fontSize: "0.75rem",
+//             fontWeight: "700",
+//             letterSpacing: "2px",
+//             background: "linear-gradient(135deg, var(--blue), var(--purple))",
+//             WebkitBackgroundClip: "text",
+//             WebkitTextFillColor: "transparent",
+//           }}>
+//           ⬡ LMS PORTAL
+//         </span>
+//         <span
+//           style={{
+//             fontFamily: "JetBrains Mono",
+//             fontSize: "0.58rem",
+//             color: "var(--muted)",
+//             background: "var(--bg)",
+//             border: "1px solid var(--border)",
+//             padding: "1px 6px",
+//             borderRadius: "4px",
+//           }}>
+//           v2.0
+//         </span>
+//       </div>
+
+//       {/* Right — clock + logout */}
+//       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+//         <div style={{ textAlign: "right" }}>
+//           <div
+//             style={{
+//               fontFamily: "JetBrains Mono",
+//               fontSize: "0.82rem",
+//               color: "var(--text)",
+//               fontWeight: "600",
+//               letterSpacing: "0.5px",
+//             }}>
+//             {formatTime(time)}
+//           </div>
+//           <div
+//             style={{
+//               fontFamily: "JetBrains Mono",
+//               fontSize: "0.62rem",
+//               color: "var(--muted)",
+//               marginTop: "1px",
+//             }}>
+//             {formatDate(time)}
+//           </div>
+//         </div>
+
+//         <div
+//           style={{ width: "1px", height: "28px", background: "var(--border)" }}
+//         />
+
+//         <button
+//           onClick={onLogout}
+//           style={{
+//             background: "#1a0808",
+//             border: "1px solid #4a1515",
+//             color: "#f87171",
+//             padding: "5px 14px",
+//             borderRadius: "8px",
+//             cursor: "pointer",
+//             fontFamily: "JetBrains Mono",
+//             fontSize: "0.75rem",
+//             letterSpacing: "0.5px",
+//             transition: "all 0.2s",
+//             display: "flex",
+//             alignItems: "center",
+//             gap: "6px",
+//           }}
+//           onMouseOver={(e) => {
+//             e.currentTarget.style.background = "#3b1111";
+//             e.currentTarget.style.borderColor = "#7f1d1d";
+//           }}
+//           onMouseOut={(e) => {
+//             e.currentTarget.style.background = "#1a0808";
+//             e.currentTarget.style.borderColor = "#4a1515";
+//           }}>
+//           ⏻ Sign Out
+//         </button>
+//       </div>
+
+//       <style>{`
+//         @keyframes pulse {
+//           0%, 100% { opacity: 1; }
+//           50% { opacity: 0.4; }
+//         }
+//       `}</style>
+//     </header>
+//   );
+// }
+
+// export default function App() {
+//   const [currentUser, setCurrentUser] = useState(null);
+//   const [systemLoading, setSystemLoading] = useState(true);
+//   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+//   useEffect(() => {
+//     const sessionAuth = localStorage.getItem("lms_auth_session");
+//     if (sessionAuth) {
+//       setCurrentUser(JSON.parse(sessionAuth));
+//     }
+//     setSystemLoading(false);
+//   }, []);
+
+//   const handleLoginSuccess = (userPayload) => {
+//     localStorage.setItem("lms_auth_session", JSON.stringify(userPayload));
+//     setCurrentUser(userPayload);
+//   };
+
+//   const handleSystemLogout = () => {
+//     localStorage.removeItem("lms_auth_session");
+//     setCurrentUser(null);
+//   };
+
+//   if (systemLoading) {
+//     return (
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "center",
+//           minHeight: "100vh",
+//           background: "var(--bg)",
+//           fontFamily: "JetBrains Mono",
+//           color: "var(--blue)",
+//           gap: "10px",
+//         }}>
+//         <div
+//           style={{
+//             width: "8px",
+//             height: "8px",
+//             borderRadius: "50%",
+//             background: "var(--blue)",
+//             animation: "pulse 1s infinite",
+//           }}
+//         />
+//         Booting System Engine...
+//       </div>
+//     );
+//   }
+
+//   if (!currentUser) {
+//     return <Login onLoginSuccess={handleLoginSuccess} />;
+//   }
+
+//   return (
+//     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+//       <TopHeader
+//         currentUser={currentUser}
+//         onLogout={handleSystemLogout}
+//         sidebarOpen={sidebarOpen}
+//         setSidebarOpen={setSidebarOpen}
+//       />
+//       {/* Spacer so content doesn't hide under fixed header */}
+//       <div style={{ paddingTop: "52px" }}>
+//         {currentUser.role === "admin" ? (
+//           <AdminDashboard
+//             currentUser={currentUser}
+//             sidebarOpen={sidebarOpen}
+//             setSidebarOpen={setSidebarOpen}
+//           />
+//         ) : (
+//           <StudentDashboard
+//             currentUser={currentUser}
+//             sidebarOpen={sidebarOpen}
+//             setSidebarOpen={setSidebarOpen}
+//           />
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
 import React, { useState, useEffect } from "react";
 import Login from "./Login";
 import AdminDashboard from "./AdminDashboard";
@@ -1238,6 +1534,14 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
+    // Validate session but also ping backend to wake Render from cold start
+    const wakeBackend = async () => {
+      try {
+        await fetch("https://pratheebahub-backend.onrender.com/api/subjects");
+      } catch (_) {}
+    };
+    wakeBackend();
+
     const sessionAuth = localStorage.getItem("lms_auth_session");
     if (sessionAuth) {
       setCurrentUser(JSON.parse(sessionAuth));
