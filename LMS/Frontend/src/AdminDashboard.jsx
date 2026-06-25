@@ -15660,8 +15660,7 @@ export default function AdminDashboard({
                                       />
                                     </div>
                                   </div>
-                                  <input
-                                    type="text"
+                                  <textarea
                                     className="input-field"
                                     placeholder="Expected Console Output"
                                     value={q.expectedOutput}
@@ -15892,8 +15891,7 @@ export default function AdminDashboard({
                               />
                             </div>
                           </div>
-                          <input
-                            type="text"
+                          <textarea
                             className="input-field"
                             placeholder="Expected Console Output (For validation)"
                             value={q.expectedOutput}
