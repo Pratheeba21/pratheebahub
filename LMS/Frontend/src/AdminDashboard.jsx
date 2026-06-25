@@ -11467,8 +11467,12 @@ export default function AdminDashboard({
   const [previewAnswers, setPreviewAnswers] = useState([]);
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
 
+  //   // Admin task preview state
+  //   const [previewTask, setPreviewTask] = useState(null);
+
   // Admin task preview state
   const [previewTask, setPreviewTask] = useState(null);
+  const [previewTaskQuestionIndex, setPreviewTaskQuestionIndex] = useState(0);
 
   const [subjectRequests, setSubjectRequests] = useState([]);
   const [requestsLoading, setRequestsLoading] = useState(false);
@@ -14813,8 +14817,14 @@ export default function AdminDashboard({
                           style={{ cursor: "pointer", flexGrow: 1 }}> */}
                         <span
                           onClick={() => {
+                            // if (activeTab === "tasks") {
+                            //   setPreviewTask(item);
+                            //   setActiveHtmlContent("__task_preview__");
+                            // } else {
+
                             if (activeTab === "tasks") {
                               setPreviewTask(item);
+                              setPreviewTaskQuestionIndex(0);
                               setActiveHtmlContent("__task_preview__");
                             } else {
                               setActiveHtmlContent(item.htmlContent);
@@ -14976,8 +14986,13 @@ export default function AdminDashboard({
                                 );
                                 setPreviewSubmitted(false);
                                 setActiveHtmlContent("__quiz_preview__");
+                                //   } else if (activeTab === "tasks") {
+                                //     setPreviewTask(item);
+                                //     setActiveHtmlContent("__task_preview__");
+                                //   } else {
                               } else if (activeTab === "tasks") {
                                 setPreviewTask(item);
+                                setPreviewTaskQuestionIndex(0);
                                 setActiveHtmlContent("__task_preview__");
                               } else {
                                 setActiveHtmlContent(item.htmlContent);
@@ -17100,151 +17115,396 @@ export default function AdminDashboard({
                     style={{ minHeight: "auto", padding: 0 }}>
                     {/* ... existing quiz preview JSX unchanged ... */}
                   </div>
-                ) : activeHtmlContent === "__task_preview__" && previewTask ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "1.5rem",
-                    }}>
-                    <div className="hero" style={{ marginBottom: 0 }}>
-                      <div className="hero-badge">📝 Admin Task Preview</div>
-                      <h1>{previewTask.title}</h1>
+                ) : // ) : activeHtmlContent === "__task_preview__" && previewTask ? (
+                //   <div
+                //     style={{
+                //       display: "flex",
+                //       flexDirection: "column",
+                //       gap: "1.5rem",
+                //     }}>
+                //     <div className="hero" style={{ marginBottom: 0 }}>
+                //       <div className="hero-badge">📝 Admin Task Preview</div>
+                //       <h1>{previewTask.title}</h1>
+                //       <div
+                //         style={{
+                //           fontFamily: "JetBrains Mono",
+                //           fontSize: "0.85rem",
+                //           color: "var(--muted)",
+                //         }}>
+                //         Topic: {previewTask.topic} ·{" "}
+                //         {(previewTask.questions || []).length} question
+                //         {(previewTask.questions || []).length !== 1 ? "s" : ""}
+                //       </div>
+                //     </div>
+
+                //     {(previewTask.questions || []).map((q, i) => (
+                //       <div
+                //         key={i}
+                //         style={{
+                //           background: "var(--surface)",
+                //           border: "1px solid var(--border)",
+                //           borderRadius: "12px",
+                //           padding: "1.5rem",
+                //         }}>
+                //         <div
+                //           style={{
+                //             fontFamily: "JetBrains Mono",
+                //             fontSize: "0.72rem",
+                //             color: "var(--amber)",
+                //             letterSpacing: "1px",
+                //             marginBottom: "0.75rem",
+                //           }}>
+                //           QUESTION #{i + 1}
+                //         </div>
+                //         <div
+                //           style={{
+                //             color: "var(--text)",
+                //             marginBottom: "1rem",
+                //             whiteSpace: "pre-wrap",
+                //           }}>
+                //           {q.questionText}
+                //         </div>
+
+                //         <div
+                //           style={{
+                //             fontFamily: "JetBrains Mono",
+                //             fontSize: "0.68rem",
+                //             color: "var(--muted)",
+                //             marginBottom: "0.75rem",
+                //           }}>
+                //           ALLOWED LANGUAGES:{" "}
+                //           <span style={{ color: "var(--blue)" }}>
+                //             {(q.allowedLanguages || []).join(", ") || "—"}
+                //           </span>
+                //         </div>
+
+                //         <div
+                //           style={{
+                //             display: "grid",
+                //             gridTemplateColumns: "1fr 1fr",
+                //             gap: "1rem",
+                //             marginBottom: "1rem",
+                //           }}>
+                //           <div>
+                //             <div
+                //               style={{
+                //                 fontFamily: "JetBrains Mono",
+                //                 fontSize: "0.7rem",
+                //                 color: "var(--green)",
+                //                 marginBottom: "4px",
+                //               }}>
+                //               PYTHON BOILERPLATE
+                //             </div>
+                //             <pre
+                //               style={{
+                //                 background: "#0a0f1d",
+                //                 border: "1px solid var(--border)",
+                //                 borderRadius: "8px",
+                //                 padding: "0.75rem",
+                //                 overflow: "auto",
+                //                 fontSize: "0.78rem",
+                //                 color: "var(--text)",
+                //                 margin: 0,
+                //               }}>
+                //               {q.initialPythonCode || "—"}
+                //             </pre>
+                //           </div>
+                //           <div>
+                //             <div
+                //               style={{
+                //                 fontFamily: "JetBrains Mono",
+                //                 fontSize: "0.7rem",
+                //                 color: "var(--blue)",
+                //                 marginBottom: "4px",
+                //               }}>
+                //               JAVA BOILERPLATE
+                //             </div>
+                //             <pre
+                //               style={{
+                //                 background: "#0a0f1d",
+                //                 border: "1px solid var(--border)",
+                //                 borderRadius: "8px",
+                //                 padding: "0.75rem",
+                //                 overflow: "auto",
+                //                 fontSize: "0.78rem",
+                //                 color: "var(--text)",
+                //                 margin: 0,
+                //               }}>
+                //               {q.initialJavaCode || "—"}
+                //             </pre>
+                //           </div>
+                //         </div>
+
+                //         <div
+                //           style={{
+                //             fontFamily: "JetBrains Mono",
+                //             fontSize: "0.7rem",
+                //             color: "var(--pink)",
+                //             marginBottom: "4px",
+                //           }}>
+                //           EXPECTED OUTPUT
+                //         </div>
+                //         <pre
+                //           style={{
+                //             background: "#0a0f1d",
+                //             border: "1px solid var(--border)",
+                //             borderRadius: "8px",
+                //             padding: "0.75rem",
+                //             overflow: "auto",
+                //             fontSize: "0.78rem",
+                //             color: "var(--text)",
+                //             margin: 0,
+                //             whiteSpace: "pre-wrap",
+                //           }}>
+                //           {q.expectedOutput || "—"}
+                //         </pre>
+                //       </div>
+                //     ))}
+                //   </div>
+                // ) : (
+
+                activeHtmlContent === "__task_preview__" && previewTask ? (
+                  <div>
+                    <div
+                      style={{
+                        background: "var(--surface)",
+                        border: "1px solid var(--border)",
+                        padding: "1.5rem",
+                        borderRadius: "12px",
+                        marginBottom: "1.5rem",
+                      }}>
                       <div
                         style={{
-                          fontFamily: "JetBrains Mono",
-                          fontSize: "0.85rem",
-                          color: "var(--muted)",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
                         }}>
-                        Topic: {previewTask.topic} ·{" "}
-                        {(previewTask.questions || []).length} question
-                        {(previewTask.questions || []).length !== 1 ? "s" : ""}
+                        <div>
+                          <span
+                            className="hero-badge"
+                            style={{
+                              color: "var(--amber)",
+                              borderColor: "var(--amber)",
+                            }}>
+                            📝 Admin Task Preview
+                          </span>
+                          <h2 style={{ marginTop: "0.5rem" }}>
+                            {previewTask.title}{" "}
+                            <span
+                              style={{
+                                color: "var(--muted)",
+                                fontSize: "0.85rem",
+                                fontWeight: 400,
+                              }}>
+                              ({previewTask.topic})
+                            </span>
+                          </h2>
+                        </div>
+
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          {(previewTask.questions || []).map((_, index) => (
+                            <button
+                              key={index}
+                              className="action-btn"
+                              style={{
+                                padding: "6px 12px",
+                                background:
+                                  previewTaskQuestionIndex === index
+                                    ? "var(--amber)"
+                                    : "var(--bg)",
+                                color:
+                                  previewTaskQuestionIndex === index
+                                    ? "var(--bg)"
+                                    : "var(--text)",
+                                borderColor: "var(--border)",
+                              }}
+                              onClick={() =>
+                                setPreviewTaskQuestionIndex(index)
+                              }>
+                              Q{index + 1}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    {(previewTask.questions || []).map((q, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          background: "var(--surface)",
-                          border: "1px solid var(--border)",
-                          borderRadius: "12px",
-                          padding: "1.5rem",
-                        }}>
-                        <div
-                          style={{
-                            fontFamily: "JetBrains Mono",
-                            fontSize: "0.72rem",
-                            color: "var(--amber)",
-                            letterSpacing: "1px",
-                            marginBottom: "0.75rem",
-                          }}>
-                          QUESTION #{i + 1}
-                        </div>
-                        <div
-                          style={{
-                            color: "var(--text)",
-                            marginBottom: "1rem",
-                            whiteSpace: "pre-wrap",
-                          }}>
-                          {q.questionText}
-                        </div>
-
-                        <div
-                          style={{
-                            fontFamily: "JetBrains Mono",
-                            fontSize: "0.68rem",
-                            color: "var(--muted)",
-                            marginBottom: "0.75rem",
-                          }}>
-                          ALLOWED LANGUAGES:{" "}
-                          <span style={{ color: "var(--blue)" }}>
-                            {(q.allowedLanguages || []).join(", ") || "—"}
-                          </span>
-                        </div>
-
+                    {(() => {
+                      const q = (previewTask.questions || [])[
+                        previewTaskQuestionIndex
+                      ];
+                      if (!q) return null;
+                      return (
                         <div
                           style={{
                             display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: "1rem",
-                            marginBottom: "1rem",
+                            gridTemplateColumns: "1fr 1.2fr",
+                            gap: "1.5rem",
+                            alignItems: "start",
                           }}>
-                          <div>
+                          <div
+                            className="form-panel"
+                            style={{ margin: 0, minHeight: "450px" }}>
+                            <div
+                              className="form-title"
+                              style={{ color: "var(--blue)" }}>
+                              📋 Challenge Specification Node #
+                              {previewTaskQuestionIndex + 1}
+                            </div>
+                            <p
+                              style={{
+                                fontSize: "0.95rem",
+                                lineHeight: "1.6",
+                                color: "#c4cfe0",
+                                whiteSpace: "pre-wrap",
+                              }}>
+                              {q.questionText}
+                            </p>
                             <div
                               style={{
-                                fontFamily: "JetBrains Mono",
-                                fontSize: "0.7rem",
-                                color: "var(--green)",
-                                marginBottom: "4px",
+                                marginTop: "2rem",
+                                paddingTop: "1.5rem",
+                                borderTop: "1px solid var(--border)",
                               }}>
-                              PYTHON BOILERPLATE
+                              <span
+                                style={{
+                                  fontSize: "0.75rem",
+                                  fontFamily: "JetBrains Mono",
+                                  color: "var(--muted)",
+                                  display: "block",
+                                  marginBottom: "0.5rem",
+                                }}>
+                                EXPECTED VERIFICATION OUTPUT VERDICT ASSERTION:
+                              </span>
+                              <div
+                                style={{
+                                  background: "#090d16",
+                                  border: "1px solid var(--border)",
+                                  padding: "0.75rem",
+                                  borderRadius: "6px",
+                                  fontFamily: "JetBrains Mono",
+                                  color: "var(--green)",
+                                  fontSize: "0.85rem",
+                                  whiteSpace: "pre-wrap",
+                                }}>
+                                {q.expectedOutput || "—"}
+                              </div>
                             </div>
-                            <pre
-                              style={{
-                                background: "#0a0f1d",
-                                border: "1px solid var(--border)",
-                                borderRadius: "8px",
-                                padding: "0.75rem",
-                                overflow: "auto",
-                                fontSize: "0.78rem",
-                                color: "var(--text)",
-                                margin: 0,
-                              }}>
-                              {q.initialPythonCode || "—"}
-                            </pre>
-                          </div>
-                          <div>
                             <div
                               style={{
-                                fontFamily: "JetBrains Mono",
-                                fontSize: "0.7rem",
-                                color: "var(--blue)",
-                                marginBottom: "4px",
+                                marginTop: "2rem",
+                                paddingTop: "1.5rem",
+                                borderTop: "1px solid var(--border)",
                               }}>
-                              JAVA BOILERPLATE
+                              <span
+                                style={{
+                                  fontSize: "0.75rem",
+                                  fontFamily: "JetBrains Mono",
+                                  color: "var(--muted)",
+                                  display: "block",
+                                  marginBottom: "0.5rem",
+                                }}>
+                                ALLOWED RUNTIME CONFIGURATIONS:
+                              </span>
+                              <div style={{ display: "flex", gap: "10px" }}>
+                                {(q.allowedLanguages || []).map((lang) => (
+                                  <span
+                                    key={lang}
+                                    style={{
+                                      fontFamily: "JetBrains Mono",
+                                      fontSize: "0.75rem",
+                                      background: "var(--bg)",
+                                      border: "1px solid var(--blue-dim)",
+                                      padding: "4px 12px",
+                                      borderRadius: "20px",
+                                      color: "var(--blue)",
+                                      textTransform: "uppercase",
+                                    }}>
+                                    {lang}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                            <pre
-                              style={{
-                                background: "#0a0f1d",
-                                border: "1px solid var(--border)",
-                                borderRadius: "8px",
-                                padding: "0.75rem",
-                                overflow: "auto",
-                                fontSize: "0.78rem",
-                                color: "var(--text)",
-                                margin: 0,
-                              }}>
-                              {q.initialJavaCode || "—"}
-                            </pre>
                           </div>
-                        </div>
 
-                        <div
-                          style={{
-                            fontFamily: "JetBrains Mono",
-                            fontSize: "0.7rem",
-                            color: "var(--pink)",
-                            marginBottom: "4px",
-                          }}>
-                          EXPECTED OUTPUT
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "1rem",
+                            }}>
+                            <div
+                              className="form-panel"
+                              style={{ margin: 0, paddingBottom: "1rem" }}>
+                              <div
+                                className="form-title"
+                                style={{ color: "var(--green)" }}>
+                                💻 Python Boilerplate
+                              </div>
+                              <div
+                                style={{
+                                  position: "relative",
+                                  background: "#040810",
+                                  borderRadius: "8px",
+                                  border: "1px solid #1a2535",
+                                }}>
+                                <textarea
+                                  readOnly
+                                  style={{
+                                    width: "100%",
+                                    minHeight: "140px",
+                                    background: "transparent",
+                                    border: "none",
+                                    outline: "none",
+                                    color: "#e2e8f0",
+                                    padding: "1rem",
+                                    fontFamily: "JetBrains Mono, monospace",
+                                    fontSize: "0.85rem",
+                                    lineHeight: "1.6",
+                                    resize: "vertical",
+                                  }}
+                                  value={q.initialPythonCode || ""}
+                                />
+                              </div>
+                            </div>
+
+                            <div
+                              className="form-panel"
+                              style={{ margin: 0, paddingBottom: "1rem" }}>
+                              <div
+                                className="form-title"
+                                style={{ color: "var(--blue)" }}>
+                                💻 Java Boilerplate
+                              </div>
+                              <div
+                                style={{
+                                  position: "relative",
+                                  background: "#040810",
+                                  borderRadius: "8px",
+                                  border: "1px solid #1a2535",
+                                }}>
+                                <textarea
+                                  readOnly
+                                  style={{
+                                    width: "100%",
+                                    minHeight: "140px",
+                                    background: "transparent",
+                                    border: "none",
+                                    outline: "none",
+                                    color: "#e2e8f0",
+                                    padding: "1rem",
+                                    fontFamily: "JetBrains Mono, monospace",
+                                    fontSize: "0.85rem",
+                                    lineHeight: "1.6",
+                                    resize: "vertical",
+                                  }}
+                                  value={q.initialJavaCode || ""}
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <pre
-                          style={{
-                            background: "#0a0f1d",
-                            border: "1px solid var(--border)",
-                            borderRadius: "8px",
-                            padding: "0.75rem",
-                            overflow: "auto",
-                            fontSize: "0.78rem",
-                            color: "var(--text)",
-                            margin: 0,
-                            whiteSpace: "pre-wrap",
-                          }}>
-                          {q.expectedOutput || "—"}
-                        </pre>
-                      </div>
-                    ))}
+                      );
+                    })()}
                   </div>
                 ) : (
                   <iframe
