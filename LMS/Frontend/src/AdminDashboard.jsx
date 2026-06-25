@@ -11467,6 +11467,9 @@ export default function AdminDashboard({
   const [previewAnswers, setPreviewAnswers] = useState([]);
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
 
+  // Admin task preview state
+  const [previewTask, setPreviewTask] = useState(null);
+
   const [subjectRequests, setSubjectRequests] = useState([]);
   const [requestsLoading, setRequestsLoading] = useState(false);
 
@@ -14802,10 +14805,20 @@ export default function AdminDashboard({
                           justifyContent: "space-between",
                           alignItems: "center",
                         }}>
-                        <span
+                        {/* <span
                           onClick={() => {
                             if (activeTab !== "tasks")
                               setActiveHtmlContent(item.htmlContent);
+                          }}
+                          style={{ cursor: "pointer", flexGrow: 1 }}> */}
+                        <span
+                          onClick={() => {
+                            if (activeTab === "tasks") {
+                              setPreviewTask(item);
+                              setActiveHtmlContent("__task_preview__");
+                            } else {
+                              setActiveHtmlContent(item.htmlContent);
+                            }
                           }}
                           style={{ cursor: "pointer", flexGrow: 1 }}>
                           ⚡ {item.title}{" "}
@@ -14916,7 +14929,7 @@ export default function AdminDashboard({
                             </button>
                           )}
 
-                          {/* ── Quizzes/Materials: View button ── */}
+                          {/* ── Quizzes/Materials: View button ──
                           {activeTab !== "tasks" && (
                             <button
                               className="action-btn"
@@ -14942,7 +14955,36 @@ export default function AdminDashboard({
                               }}>
                               View
                             </button>
-                          )}
+                          )} */}
+
+                          {/* ── Quizzes/Materials/Tasks: View button ── */}
+                          <button
+                            className="action-btn"
+                            style={{
+                              padding: "4px 10px",
+                              fontSize: "0.75rem",
+                              borderColor: "var(--blue)",
+                              color: "var(--blue)",
+                            }}
+                            onClick={() => {
+                              if (activeTab === "quizzes") {
+                                setPreviewQuiz(item);
+                                setPreviewAnswers(
+                                  new Array((item.questions || []).length).fill(
+                                    null,
+                                  ),
+                                );
+                                setPreviewSubmitted(false);
+                                setActiveHtmlContent("__quiz_preview__");
+                              } else if (activeTab === "tasks") {
+                                setPreviewTask(item);
+                                setActiveHtmlContent("__task_preview__");
+                              } else {
+                                setActiveHtmlContent(item.htmlContent);
+                              }
+                            }}>
+                            View
+                          </button>
 
                           <button
                             className="action-btn"
@@ -16882,16 +16924,26 @@ export default function AdminDashboard({
 
             {activeHtmlContent && (
               <div>
-                <button
+                {/* <button
                   className="action-btn close-view-btn"
                   onClick={() => {
                     setActiveHtmlContent(null);
                     setPreviewQuiz(null);
                   }}>
                   ← Close Viewport Document
+                </button> */}
+
+                <button
+                  className="action-btn close-view-btn"
+                  onClick={() => {
+                    setActiveHtmlContent(null);
+                    setPreviewQuiz(null);
+                    setPreviewTask(null);
+                  }}>
+                  ← Close Viewport Document
                 </button>
 
-                {activeHtmlContent === "__quiz_preview__" && previewQuiz ? (
+                {/* {activeHtmlContent === "__quiz_preview__" && previewQuiz ? (
                   <div
                     className="quiz-wrap"
                     style={{ minHeight: "auto", padding: 0 }}>
@@ -17039,6 +17091,160 @@ export default function AdminDashboard({
                         })()}
                       </div>
                     )}
+                  </div>
+                ) : (
+                  <iframe */}
+                {activeHtmlContent === "__quiz_preview__" && previewQuiz ? (
+                  <div
+                    className="quiz-wrap"
+                    style={{ minHeight: "auto", padding: 0 }}>
+                    {/* ... existing quiz preview JSX unchanged ... */}
+                  </div>
+                ) : activeHtmlContent === "__task_preview__" && previewTask ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1.5rem",
+                    }}>
+                    <div className="hero" style={{ marginBottom: 0 }}>
+                      <div className="hero-badge">📝 Admin Task Preview</div>
+                      <h1>{previewTask.title}</h1>
+                      <div
+                        style={{
+                          fontFamily: "JetBrains Mono",
+                          fontSize: "0.85rem",
+                          color: "var(--muted)",
+                        }}>
+                        Topic: {previewTask.topic} ·{" "}
+                        {(previewTask.questions || []).length} question
+                        {(previewTask.questions || []).length !== 1 ? "s" : ""}
+                      </div>
+                    </div>
+
+                    {(previewTask.questions || []).map((q, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          background: "var(--surface)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "12px",
+                          padding: "1.5rem",
+                        }}>
+                        <div
+                          style={{
+                            fontFamily: "JetBrains Mono",
+                            fontSize: "0.72rem",
+                            color: "var(--amber)",
+                            letterSpacing: "1px",
+                            marginBottom: "0.75rem",
+                          }}>
+                          QUESTION #{i + 1}
+                        </div>
+                        <div
+                          style={{
+                            color: "var(--text)",
+                            marginBottom: "1rem",
+                            whiteSpace: "pre-wrap",
+                          }}>
+                          {q.questionText}
+                        </div>
+
+                        <div
+                          style={{
+                            fontFamily: "JetBrains Mono",
+                            fontSize: "0.68rem",
+                            color: "var(--muted)",
+                            marginBottom: "0.75rem",
+                          }}>
+                          ALLOWED LANGUAGES:{" "}
+                          <span style={{ color: "var(--blue)" }}>
+                            {(q.allowedLanguages || []).join(", ") || "—"}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: "1rem",
+                            marginBottom: "1rem",
+                          }}>
+                          <div>
+                            <div
+                              style={{
+                                fontFamily: "JetBrains Mono",
+                                fontSize: "0.7rem",
+                                color: "var(--green)",
+                                marginBottom: "4px",
+                              }}>
+                              PYTHON BOILERPLATE
+                            </div>
+                            <pre
+                              style={{
+                                background: "#0a0f1d",
+                                border: "1px solid var(--border)",
+                                borderRadius: "8px",
+                                padding: "0.75rem",
+                                overflow: "auto",
+                                fontSize: "0.78rem",
+                                color: "var(--text)",
+                                margin: 0,
+                              }}>
+                              {q.initialPythonCode || "—"}
+                            </pre>
+                          </div>
+                          <div>
+                            <div
+                              style={{
+                                fontFamily: "JetBrains Mono",
+                                fontSize: "0.7rem",
+                                color: "var(--blue)",
+                                marginBottom: "4px",
+                              }}>
+                              JAVA BOILERPLATE
+                            </div>
+                            <pre
+                              style={{
+                                background: "#0a0f1d",
+                                border: "1px solid var(--border)",
+                                borderRadius: "8px",
+                                padding: "0.75rem",
+                                overflow: "auto",
+                                fontSize: "0.78rem",
+                                color: "var(--text)",
+                                margin: 0,
+                              }}>
+                              {q.initialJavaCode || "—"}
+                            </pre>
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            fontFamily: "JetBrains Mono",
+                            fontSize: "0.7rem",
+                            color: "var(--pink)",
+                            marginBottom: "4px",
+                          }}>
+                          EXPECTED OUTPUT
+                        </div>
+                        <pre
+                          style={{
+                            background: "#0a0f1d",
+                            border: "1px solid var(--border)",
+                            borderRadius: "8px",
+                            padding: "0.75rem",
+                            overflow: "auto",
+                            fontSize: "0.78rem",
+                            color: "var(--text)",
+                            margin: 0,
+                            whiteSpace: "pre-wrap",
+                          }}>
+                          {q.expectedOutput || "—"}
+                        </pre>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <iframe
