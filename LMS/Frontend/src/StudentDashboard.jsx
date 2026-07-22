@@ -3883,295 +3883,325 @@ export default function StudentDashboard({
       </div> */}
       <div className="dashboard-container">
         <div className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
-  {/* Header */}
-  <div className="sidebar-header">
-    <span className="sidebar-brand">⬡ STUDENT DESK</span>
-  </div>
-
-  {/* User Profile Block */}
-  <div className="sidebar-profile">
-    <div className="sidebar-avatar">
-      {currentUser.username[0].toUpperCase()}
-    </div>
-    <div style={{ overflow: "hidden" }}>
-      <div className="sidebar-username">{currentUser.username}</div>
-      <span className="sidebar-role-badge sidebar-role-student">
-        student
-      </span>
-    </div>
-  </div>
-
-  {/* ── SUBJECTS SECTION ── */}
-  <div className="sidebar-menu-section">
-    <div className="sidebar-heading">Explore Subjects</div>
-    <div
-      className={`sidebar-item ${activeTab === "__all_subjects__" && workspaceMode === "subjects" ? "active" : ""}`}
-      onClick={() => {
-        setWorkspaceMode("subjects");
-        setActiveSubjectId(null);
-        setActiveTab("__all_subjects__");
-        setActiveHtmlContent(null);
-        setActiveTask(null);
-        setActiveQuiz(null);
-        setActiveCourseId(null);
-      }}>
-      <span style={{ fontSize: "1rem" }}>🌐</span> All Subjects
-      {allSubjects.length > 0 && (
-        <span
-          style={{
-            marginLeft: "auto",
-            background: "var(--blue-dim)",
-            border: "1px solid var(--blue)",
-            color: "var(--blue)",
-            fontFamily: "JetBrains Mono",
-            fontSize: "0.62rem",
-            padding: "1px 7px",
-            borderRadius: "10px",
-          }}>
-          {allSubjects.length}
-        </span>
-      )}
-    </div>
-
-    <div className="sidebar-heading">My Subjects</div>
-
-    {/* Subject Search */}
-    <div style={{ padding: "0 0.75rem 0.5rem" }}>
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        background: "#0a0f1d",
-        border: "1px solid var(--border)",
-        borderRadius: "8px",
-        padding: "5px 10px",
-        gap: "6px",
-      }}>
-        <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>🔍</span>
-        <input
-          type="text"
-          placeholder="Search subjects..."
-          value={subjectSearch}
-          onChange={(e) => setSubjectSearch(e.target.value)}
-          style={{
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            color: "var(--text)",
-            fontFamily: "JetBrains Mono",
-            fontSize: "0.72rem",
-            width: "100%",
-          }}
-        />
-        {subjectSearch && (
-          <span
-            style={{ cursor: "pointer", color: "var(--muted)", fontSize: "0.75rem" }}
-            onClick={() => setSubjectSearch("")}>
-            ✕
-          </span>
-        )}
-      </div>
-    </div>
-
-    {assignedSubjects.length === 0 ? (
-      <div
-        style={{
-          padding: "0.75rem 1.5rem",
-          fontSize: "0.78rem",
-          color: "var(--muted)",
-          fontFamily: "JetBrains Mono",
-          fontStyle: "italic",
-        }}>
-        No subjects assigned yet.
-      </div>
-    ) : (
-      (() => {
-        const filtered = assignedSubjects.filter((s) =>
-          s.name.toLowerCase().includes(subjectSearch.toLowerCase())
-        );
-        return filtered.length === 0 ? (
-          <div style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "0.72rem",
-            color: "var(--muted)",
-            fontFamily: "JetBrains Mono",
-            fontStyle: "italic",
-          }}>
-            No matches found.
+          {/* Header */}
+          <div className="sidebar-header">
+            <span className="sidebar-brand">⬡ STUDENT DESK</span>
           </div>
-        ) : (
-          filtered.map((sub) => (
+
+          {/* User Profile Block */}
+          <div className="sidebar-profile">
+            <div className="sidebar-avatar">
+              {currentUser.username[0].toUpperCase()}
+            </div>
+            <div style={{ overflow: "hidden" }}>
+              <div className="sidebar-username">{currentUser.username}</div>
+              <span className="sidebar-role-badge sidebar-role-student">
+                student
+              </span>
+            </div>
+          </div>
+
+          {/* ── SUBJECTS SECTION ── */}
+          <div className="sidebar-menu-section">
+            <div className="sidebar-heading">Explore Subjects</div>
             <div
-              key={sub._id}
-              className={`sidebar-item ${activeSubjectId === sub._id ? "active" : ""}`}
+              className={`sidebar-item ${activeTab === "__all_subjects__" && workspaceMode === "subjects" ? "active" : ""}`}
               onClick={() => {
                 setWorkspaceMode("subjects");
-                setActiveSubjectId(sub._id);
-                setActiveTab(null);
+                setActiveSubjectId(null);
+                setActiveTab("__all_subjects__");
                 setActiveHtmlContent(null);
                 setActiveTask(null);
                 setActiveQuiz(null);
                 setActiveCourseId(null);
               }}>
-              <span className="sidebar-subject-dot"></span>
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {sub.name}
-              </span>
+              <span style={{ fontSize: "1rem" }}>🌐</span> All Subjects
+              {allSubjects.length > 0 && (
+                <span
+                  style={{
+                    marginLeft: "auto",
+                    background: "var(--blue-dim)",
+                    border: "1px solid var(--blue)",
+                    color: "var(--blue)",
+                    fontFamily: "JetBrains Mono",
+                    fontSize: "0.62rem",
+                    padding: "1px 7px",
+                    borderRadius: "10px",
+                  }}>
+                  {allSubjects.length}
+                </span>
+              )}
             </div>
-          ))
-        );
-      })()
-    )}
 
-    {/* My Progress */}
-    <div className="sidebar-heading">My Progress</div>
-    <div
-      className={`sidebar-item ${activeTab === "__progress__" ? "active" : ""}`}
-      onClick={() => {
-        setWorkspaceMode("subjects");
-        setActiveSubjectId(null);
-        setActiveTab("__progress__");
-        setActiveHtmlContent(null);
-        setActiveTask(null);
-        setActiveQuiz(null);
-        setActiveCourseId(null);
-      }}>
-      <span style={{ fontSize: "1rem" }}>📊</span> My Progress
-    </div>
-  </div>
+            <div className="sidebar-heading">My Subjects</div>
 
-  {/* Divider */}
-  <div style={{
-    margin: "0.5rem 1rem",
-    borderTop: "1px solid var(--border)",
-    opacity: 0.5,
-  }} />
+            {/* Subject Search */}
+            <div style={{ padding: "0 0.75rem 0.5rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#0a0f1d",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                  padding: "5px 10px",
+                  gap: "6px",
+                }}>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
+                  🔍
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search subjects..."
+                  value={subjectSearch}
+                  onChange={(e) => setSubjectSearch(e.target.value)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--text)",
+                    fontFamily: "JetBrains Mono",
+                    fontSize: "0.72rem",
+                    width: "100%",
+                  }}
+                />
+                {subjectSearch && (
+                  <span
+                    style={{
+                      cursor: "pointer",
+                      color: "var(--muted)",
+                      fontSize: "0.75rem",
+                    }}
+                    onClick={() => setSubjectSearch("")}>
+                    ✕
+                  </span>
+                )}
+              </div>
+            </div>
 
-  {/* ── COURSES SECTION ── */}
-  <div className="sidebar-menu-section">
-    <div className="sidebar-heading">Explore Courses</div>
-    <div
-      className={`sidebar-item ${workspaceMode === "courses" && !activeCourseId ? "active" : ""}`}
-      onClick={() => {
-        setWorkspaceMode("courses");
-        setActiveCourseId(null);
-        setActiveModuleId(null);
-        setActiveTopicId(null);
-        setActiveTopicContentType(null);
-        setActiveSubjectId(null);
-        setActiveTab(null);
-      }}>
-      <span style={{ fontSize: "1rem" }}>🌐</span> All Courses
-      {courses.length > 0 && (
-        <span
-          style={{
-            marginLeft: "auto",
-            background: "var(--blue-dim)",
-            border: "1px solid var(--purple)",
-            color: "var(--purple)",
-            fontFamily: "JetBrains Mono",
-            fontSize: "0.62rem",
-            padding: "1px 7px",
-            borderRadius: "10px",
-          }}>
-          {courses.length}
-        </span>
-      )}
-    </div>
+            {assignedSubjects.length === 0 ? (
+              <div
+                style={{
+                  padding: "0.75rem 1.5rem",
+                  fontSize: "0.78rem",
+                  color: "var(--muted)",
+                  fontFamily: "JetBrains Mono",
+                  fontStyle: "italic",
+                }}>
+                No subjects assigned yet.
+              </div>
+            ) : (
+              (() => {
+                const filtered = assignedSubjects.filter((s) =>
+                  s.name.toLowerCase().includes(subjectSearch.toLowerCase()),
+                );
+                return filtered.length === 0 ? (
+                  <div
+                    style={{
+                      padding: "0.75rem 1.5rem",
+                      fontSize: "0.72rem",
+                      color: "var(--muted)",
+                      fontFamily: "JetBrains Mono",
+                      fontStyle: "italic",
+                    }}>
+                    No matches found.
+                  </div>
+                ) : (
+                  filtered.map((sub) => (
+                    <div
+                      key={sub._id}
+                      className={`sidebar-item ${activeSubjectId === sub._id ? "active" : ""}`}
+                      onClick={() => {
+                        setWorkspaceMode("subjects");
+                        setActiveSubjectId(sub._id);
+                        setActiveTab(null);
+                        setActiveHtmlContent(null);
+                        setActiveTask(null);
+                        setActiveQuiz(null);
+                        setActiveCourseId(null);
+                      }}>
+                      <span className="sidebar-subject-dot"></span>
+                      <span
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                        {sub.name}
+                      </span>
+                    </div>
+                  ))
+                );
+              })()
+            )}
 
-    <div className="sidebar-heading">My Courses</div>
-
-    {/* Course Search */}
-    <div style={{ padding: "0 0.75rem 0.5rem" }}>
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        background: "#0a0f1d",
-        border: "1px solid var(--border)",
-        borderRadius: "8px",
-        padding: "5px 10px",
-        gap: "6px",
-      }}>
-        <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>🔍</span>
-        <input
-          type="text"
-          placeholder="Search courses..."
-          value={courseSearch}
-          onChange={(e) => setCourseSearch(e.target.value)}
-          style={{
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            color: "var(--text)",
-            fontFamily: "JetBrains Mono",
-            fontSize: "0.72rem",
-            width: "100%",
-          }}
-        />
-        {courseSearch && (
-          <span
-            style={{ cursor: "pointer", color: "var(--muted)", fontSize: "0.75rem" }}
-            onClick={() => setCourseSearch("")}>
-            ✕
-          </span>
-        )}
-      </div>
-    </div>
-
-    {assignedCourses.length === 0 ? (
-      <div
-        style={{
-          padding: "0.75rem 1.5rem",
-          fontSize: "0.78rem",
-          color: "var(--muted)",
-          fontFamily: "JetBrains Mono",
-          fontStyle: "italic",
-        }}>
-        No courses assigned yet.
-      </div>
-    ) : (
-      (() => {
-        const filtered = assignedCourses.filter((c) =>
-          c.name.toLowerCase().includes(courseSearch.toLowerCase())
-        );
-        return filtered.length === 0 ? (
-          <div style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "0.72rem",
-            color: "var(--muted)",
-            fontFamily: "JetBrains Mono",
-            fontStyle: "italic",
-          }}>
-            No matches found.
-          </div>
-        ) : (
-          filtered.map((course) => (
+            {/* My Progress */}
+            <div className="sidebar-heading">My Progress</div>
             <div
-              key={course._id}
-              className={`sidebar-item ${activeCourseId === course._id ? "active" : ""}`}
+              className={`sidebar-item ${activeTab === "__progress__" ? "active" : ""}`}
+              onClick={() => {
+                setWorkspaceMode("subjects");
+                setActiveSubjectId(null);
+                setActiveTab("__progress__");
+                setActiveHtmlContent(null);
+                setActiveTask(null);
+                setActiveQuiz(null);
+                setActiveCourseId(null);
+              }}>
+              <span style={{ fontSize: "1rem" }}>📊</span> My Progress
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div
+            style={{
+              margin: "0.5rem 1rem",
+              borderTop: "1px solid var(--border)",
+              opacity: 0.5,
+            }}
+          />
+
+          {/* ── COURSES SECTION ── */}
+          <div className="sidebar-menu-section">
+            <div className="sidebar-heading">Explore Courses</div>
+            <div
+              className={`sidebar-item ${workspaceMode === "courses" && !activeCourseId ? "active" : ""}`}
               onClick={() => {
                 setWorkspaceMode("courses");
-                setActiveCourseId(course._id);
+                setActiveCourseId(null);
                 setActiveModuleId(null);
                 setActiveTopicId(null);
                 setActiveTopicContentType(null);
                 setActiveSubjectId(null);
                 setActiveTab(null);
               }}>
-              <span className="sidebar-subject-dot" style={{ background: "var(--purple)" }}></span>
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {course.name}
-              </span>
+              <span style={{ fontSize: "1rem" }}>🌐</span> All Courses
+              {courses.length > 0 && (
+                <span
+                  style={{
+                    marginLeft: "auto",
+                    background: "var(--blue-dim)",
+                    border: "1px solid var(--purple)",
+                    color: "var(--purple)",
+                    fontFamily: "JetBrains Mono",
+                    fontSize: "0.62rem",
+                    padding: "1px 7px",
+                    borderRadius: "10px",
+                  }}>
+                  {courses.length}
+                </span>
+              )}
             </div>
-          ))
-        );
-      })()
-    )}
-  </div>
 
-  <div className="sidebar-footer">
-    <span>●</span> LMS ENGINE v2.0
-  </div>
-</div>
+            <div className="sidebar-heading">My Courses</div>
+
+            {/* Course Search */}
+            <div style={{ padding: "0 0.75rem 0.5rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#0a0f1d",
+                  border: "1px solid var(--border)",
+                  borderRadius: "8px",
+                  padding: "5px 10px",
+                  gap: "6px",
+                }}>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
+                  🔍
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={courseSearch}
+                  onChange={(e) => setCourseSearch(e.target.value)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--text)",
+                    fontFamily: "JetBrains Mono",
+                    fontSize: "0.72rem",
+                    width: "100%",
+                  }}
+                />
+                {courseSearch && (
+                  <span
+                    style={{
+                      cursor: "pointer",
+                      color: "var(--muted)",
+                      fontSize: "0.75rem",
+                    }}
+                    onClick={() => setCourseSearch("")}>
+                    ✕
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {assignedCourses.length === 0 ? (
+              <div
+                style={{
+                  padding: "0.75rem 1.5rem",
+                  fontSize: "0.78rem",
+                  color: "var(--muted)",
+                  fontFamily: "JetBrains Mono",
+                  fontStyle: "italic",
+                }}>
+                No courses assigned yet.
+              </div>
+            ) : (
+              (() => {
+                const filtered = assignedCourses.filter((c) =>
+                  c.name.toLowerCase().includes(courseSearch.toLowerCase()),
+                );
+                return filtered.length === 0 ? (
+                  <div
+                    style={{
+                      padding: "0.75rem 1.5rem",
+                      fontSize: "0.72rem",
+                      color: "var(--muted)",
+                      fontFamily: "JetBrains Mono",
+                      fontStyle: "italic",
+                    }}>
+                    No matches found.
+                  </div>
+                ) : (
+                  filtered.map((course) => (
+                    <div
+                      key={course._id}
+                      className={`sidebar-item ${activeCourseId === course._id ? "active" : ""}`}
+                      onClick={() => {
+                        setWorkspaceMode("courses");
+                        setActiveCourseId(course._id);
+                        setActiveModuleId(null);
+                        setActiveTopicId(null);
+                        setActiveTopicContentType(null);
+                        setActiveSubjectId(null);
+                        setActiveTab(null);
+                      }}>
+                      <span
+                        className="sidebar-subject-dot"
+                        style={{ background: "var(--purple)" }}></span>
+                      <span
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                        {course.name}
+                      </span>
+                    </div>
+                  ))
+                );
+              })()
+            )}
+          </div>
+
+          <div className="sidebar-footer">
+            <span>●</span> LMS ENGINE v2.0
+          </div>
+        </div>
 
         {/* <div
           className="main-viewport"
@@ -4668,6 +4698,21 @@ export default function StudentDashboard({
                               }}>
                               EXPECTED VERIFICATION OUTPUT VERDICT ASSERTION:
                             </span>
+                            {/* <div
+                              style={{
+                                background: "#090d16",
+                                border: "1px solid var(--border)",
+                                padding: "0.75rem",
+                                borderRadius: "6px",
+                                fontFamily: "JetBrains Mono",
+                                color: "var(--green)",
+                                fontSize: "0.85rem",
+                              }}>
+                              {
+                                activeTask.questions[selectedQuestionIndex]
+                                  ?.expectedOutput
+                              }
+                            </div> */}
                             <div
                               style={{
                                 background: "#090d16",
@@ -4677,6 +4722,7 @@ export default function StudentDashboard({
                                 fontFamily: "JetBrains Mono",
                                 color: "var(--green)",
                                 fontSize: "0.85rem",
+                                whiteSpace: "pre-wrap",
                               }}>
                               {
                                 activeTask.questions[selectedQuestionIndex]
@@ -5552,7 +5598,8 @@ export default function StudentDashboard({
         </div>
         <Modal modal={modal} close={closeModal} />
       </div>
-    // </>
+      //{" "}
+    </>
   );
 }
 
