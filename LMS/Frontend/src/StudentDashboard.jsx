@@ -2743,9 +2743,14 @@ export default function StudentDashboard({
     setConsoleOutputLog("Initializing virtual execution pipeline layer...\n");
     const currentQuestion = activeTask.questions[selectedQuestionIndex];
 
+    // const languageMap = {
+    //   python: { language: "python", version: "3.10.0" },
+    //   java: { language: "java", version: "15.0.2" },
+    // };
+
     const languageMap = {
-      python: { language: "python", version: "3.10.0" },
-      java: { language: "java", version: "15.0.2" },
+      python: { language: "python", version: "*" },
+      java: { language: "java", version: "*" },
     };
 
     const runtime = languageMap[selectedRuntimeLanguage];
@@ -2762,14 +2767,44 @@ export default function StudentDashboard({
         body: JSON.stringify({
           language: runtime.language,
           version: runtime.version,
-          files: [{ name: "main", content: studentCodeInput }],
+          // files: [{ name: "main", content: studentCodeInput }],
+          files: [
+            {
+              name:
+                selectedRuntimeLanguage === "java" ? "Main.java" : "main.py",
+              content: studentCodeInput,
+            },
+          ],
         }),
       });
 
+      // const data = await response.json();
+      // const output =
+      //   data?.run?.stdout ||
+      //   data?.run?.stderr ||
+      //   "Process executed with no stdout values.";
+      // const trimmedOutput = output.trimEnd();
+
+      // setConsoleOutputLog(trimmedOutput);
+
+      // if (trimmedOutput.trim() === currentQuestion.expectedOutput.trim())
+      //   setIsOutputValid(true);
+      // else setIsOutputValid(false);
+
       const data = await response.json();
+
+      if (!response.ok || !data?.run) {
+        setConsoleOutputLog(
+          `Error: ${data?.message || "Execution runtime unavailable. Please try again."}`,
+        );
+        setIsOutputValid(false);
+        return;
+      }
+
       const output =
-        data?.run?.stdout ||
-        data?.run?.stderr ||
+        data.run.stdout ||
+        data.run.stderr ||
+        data?.compile?.stderr ||
         "Process executed with no stdout values.";
       const trimmedOutput = output.trimEnd();
 
@@ -2778,6 +2813,7 @@ export default function StudentDashboard({
       if (trimmedOutput.trim() === currentQuestion.expectedOutput.trim())
         setIsOutputValid(true);
       else setIsOutputValid(false);
+
     } catch (err) {
       setConsoleOutputLog(
         "Error: Failed to reach execution runtime. Check your connection.",
