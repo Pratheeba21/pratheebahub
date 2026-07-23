@@ -2698,92 +2698,45 @@ export default function StudentDashboard({
     }
   };
 
-  // const executeSandboxRuntimeEngine = () => {
-  //   setConsoleOutputLog("Initializing virtual execution pipeline layer...\n");
-  //   setTimeout(() => {
-  //     const currentQuestion = activeTask.questions[selectedQuestionIndex];
-  //     let consoleCapture = "";
-
-  //     if (selectedRuntimeLanguage === "python") {
-  //       if (studentCodeInput.includes("print(")) {
-  //         const regexExtract = /print\s*\(\s*['"]([^'"]*)['"]\s*\)/g;
-  //         let matchGroup,
-  //           lines = [];
-  //         while ((matchGroup = regexExtract.exec(studentCodeInput)) !== null)
-  //           lines.push(matchGroup[1]);
-  //         consoleCapture =
-  //           lines.join("\n") || "Process executed with no stdout values.";
-  //       } else
-  //         consoleCapture =
-  //           "Error: No output returned to standard stdout stream.";
-  //     } else if (selectedRuntimeLanguage === "java") {
-  //       if (studentCodeInput.includes("System.out.println(")) {
-  //         const regexJavaExtract =
-  //           /System\.out\.println\s*\(\s*['"]([^'"]*)['"]\s*\)/g;
-  //         let matchGroup,
-  //           lines = [];
-  //         while (
-  //           (matchGroup = regexJavaExtract.exec(studentCodeInput)) !== null
-  //         )
-  //           lines.push(matchGroup[1]);
-  //         consoleCapture = lines.join("\n") || "Java Process output empty.";
-  //       } else
-  //         consoleCapture =
-  //           "Compilation Error: Missing printing statement pipeline.";
-  //     }
-
-  //     setConsoleOutputLog(consoleCapture);
-  //     if (consoleCapture.trim() === currentQuestion.expectedOutput.trim())
-  //       setIsOutputValid(true);
-  //     else setIsOutputValid(false);
-  //   }, 900);
-  // };
-
-  const executeSandboxRuntimeEngine = async () => {
+  const executeSandboxRuntimeEngine = () => {
     setConsoleOutputLog("Initializing virtual execution pipeline layer...\n");
-    const currentQuestion = activeTask.questions[selectedQuestionIndex];
+    setTimeout(() => {
+      const currentQuestion = activeTask.questions[selectedQuestionIndex];
+      let consoleCapture = "";
 
-    const languageMap = {
-      python: { language: "python", version: "3.10.0" },
-      java: { language: "java", version: "15.0.2" },
-    };
+      if (selectedRuntimeLanguage === "python") {
+        if (studentCodeInput.includes("print(")) {
+          const regexExtract = /print\s*\(\s*['"]([^'"]*)['"]\s*\)/g;
+          let matchGroup,
+            lines = [];
+          while ((matchGroup = regexExtract.exec(studentCodeInput)) !== null)
+            lines.push(matchGroup[1]);
+          consoleCapture =
+            lines.join("\n") || "Process executed with no stdout values.";
+        } else
+          consoleCapture =
+            "Error: No output returned to standard stdout stream.";
+      } else if (selectedRuntimeLanguage === "java") {
+        if (studentCodeInput.includes("System.out.println(")) {
+          const regexJavaExtract =
+            /System\.out\.println\s*\(\s*['"]([^'"]*)['"]\s*\)/g;
+          let matchGroup,
+            lines = [];
+          while (
+            (matchGroup = regexJavaExtract.exec(studentCodeInput)) !== null
+          )
+            lines.push(matchGroup[1]);
+          consoleCapture = lines.join("\n") || "Java Process output empty.";
+        } else
+          consoleCapture =
+            "Compilation Error: Missing printing statement pipeline.";
+      }
 
-    const runtime = languageMap[selectedRuntimeLanguage];
-    if (!runtime) {
-      setConsoleOutputLog("Error: Unsupported runtime language selected.");
-      setIsOutputValid(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: runtime.language,
-          version: runtime.version,
-          files: [{ name: "main", content: studentCodeInput }],
-        }),
-      });
-
-      const data = await response.json();
-      const output =
-        data?.run?.stdout ||
-        data?.run?.stderr ||
-        "Process executed with no stdout values.";
-      const trimmedOutput = output.trimEnd();
-
-      setConsoleOutputLog(trimmedOutput);
-
-      if (trimmedOutput.trim() === currentQuestion.expectedOutput.trim())
+      setConsoleOutputLog(consoleCapture);
+      if (consoleCapture.trim() === currentQuestion.expectedOutput.trim())
         setIsOutputValid(true);
       else setIsOutputValid(false);
-    } catch (err) {
-      setConsoleOutputLog(
-        "Error: Failed to reach execution runtime. Check your connection.",
-      );
-      setIsOutputValid(false);
-    }
+    }, 900);
   };
 
   const handleFinalTaskSubmit = async () => {
